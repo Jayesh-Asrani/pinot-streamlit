@@ -21,7 +21,7 @@ def overview():
            distinctcount(user) FILTER(WHERE  ts <= ago('PT1M') AND ts > ago('PT2M')) AS users1Min2Min,
            distinctcount(domain) FILTER(WHERE  ts > ago('PT1M')) AS domains1Min,
            distinctcount(domain) FILTER(WHERE  ts <= ago('PT1M') AND ts > ago('PT2M')) AS domains1Min2Min
-    from Dummy  
+    from Wiki_Events  
     where ts > ago('PT2M')
     limit 1
     """
@@ -55,11 +55,11 @@ def overview():
     select ToDateTime(DATETRUNC('MINUTE', ts), 'yyyy-MM-dd hh:mm:ss') AS dateMin, count(*) AS changes, 
            distinctcount(user) AS users,
            distinctcount(domain) AS domains
-    from Dummy  
+    from Wiki_Events  
     where ts > ago('PT1H')
-	group by dateMin
-	order by dateMin desc
-	LIMIT 30
+    group by dateMin
+    order by dateMin desc
+    LIMIT 30
     """
 
     curs.execute(query)
@@ -76,7 +76,7 @@ def overview():
 
     query = """
     select ts, user, title, domain
-    from Dummy  
+    from Wiki_Events  
     order by ts desc
     LIMIT 20
     """
@@ -104,7 +104,7 @@ def whos_making_changes():
 
     query = """
     select bot, count(*) AS changes
-    from Dummy  
+    from Wiki_Events  
     group by bot
     """
 
@@ -120,7 +120,7 @@ def whos_making_changes():
 
     query = """
     select user, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     group by user
     order by changes DESC
     LIMIT 10
@@ -136,7 +136,7 @@ def whos_making_changes():
 
     query = """
     select user, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     WHERE bot = True
     group by user
     order by changes DESC
@@ -153,7 +153,7 @@ def whos_making_changes():
 
     query = """
     select user, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     WHERE bot = False
     group by user
     order by changes DESC
@@ -177,7 +177,7 @@ def what_changes():
 
     query = """
     select domain, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     group by domain
     order by changes DESC
     LIMIT 10
@@ -194,7 +194,7 @@ def what_changes():
 
     query = """
     select type, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     group by type
     order by changes DESC
     LIMIT 10
@@ -217,7 +217,7 @@ def drill_down():
     curs = conn.cursor()
     curs.execute("""
     select user, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     group by user
     order by changes DESC
     LIMIT 30
@@ -245,7 +245,7 @@ def drill_down():
     curs = conn.cursor()
     curs.execute("""
     select count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     WHERE user = %(user)s
     """, {"user": selected_user})
 
@@ -256,7 +256,7 @@ def drill_down():
 
     query = """
     select domain, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     WHERE user = %(user)s
     group by domain
     order by changes DESC
@@ -273,7 +273,7 @@ def drill_down():
 
     query = """
     select type, count(user) AS changes
-    from Dummy  
+    from Wiki_Events  
     WHERE user = %(user)s
     group by type
     order by changes DESC

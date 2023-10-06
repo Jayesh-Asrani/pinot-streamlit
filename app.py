@@ -11,7 +11,7 @@ st.set_page_config(layout="wide")
 
 
 conn = connect(host='broker.pinot.saas.demo.startree.cloud', port=443, path='/query/sql', scheme='https',
-               username=st.secrets["username"]), password=st.secrets["password"]))
+               username=st.secrets["username"], password=st.secrets["password"])
 def overview():
     st.header("Overview")
     query = """
